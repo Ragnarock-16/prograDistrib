@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timer
+  template:
+    metadata:
+      labels:
+        app: timer
+    spec:
+      containers:
+        - image: noureddinebert/timer:1.2
+          imagePullPolicy: IfNotPresent
+          name: timer
+      restartPolicy: Always

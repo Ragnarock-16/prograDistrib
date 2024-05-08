@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    docker build -t myservice .
+    <div class="container">
+        <h1 class="timer">00:00:00</h1>
+        <div class="buttons">
+            <button onclick="startTimer()">Start</button>
+            <button onclick="stopTimer()">Stop</button>
+            <button onclick="resetTimer()">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        var timerInterval;
+        var startTime;
+        var elapsedTime = 0;
+
+        function startTimer() {
+            if (!timerInterval) {
+                startTime = Date.now() - elapsedTime;
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                elapsedTime += Date.now() - startTime; // Update elapsedTime to account for paused time
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            elapsedTime = 0;
+            startTime = Date.now(); // Reset startTime to the current time
+            updateTimer();
+        }
+
+        function updateTimer() {
+            var timerElement = document.querySelector('.timer');
+            if (timerElement) {
+                var currentTime = Date.now() - startTime + elapsedTime;
+                var hours = Math.floor(currentTime / 3600000);
+                var minutes = Math.floor((currentTime % 3600000) / 60000);
+                var seconds = Math.floor((currentTime % 60000) / 1000);
+
+                var formattedTime = padNumber(hours) + ":" + padNumber(minutes) + ":" + padNumber(seconds);
+                timerElement.textContent = formattedTime;
+            }
+        }
+
+        function padNumber(number) {
+            return (number < 10) ? ("0" + number) : number;
+        }
+    </script>
+</body>
+</html>
